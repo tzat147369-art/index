@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星河占卜，塔罗启示</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&display=swap" rel="stylesheet">
+    <style>
+        .intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a0933, #0d0126 80%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 2000;
+            animation: fadeOut 2s ease forwards;
+            animation-delay: 3s;
+        }
+
+        .intro-title {
+            font-family: 'Zhi Mang Xing', cursive;
+            font-size: 3.5em;
+            color: #ffda6b;
+            text-shadow: 0 0 20px rgba(255, 218, 107, 0.9), 0 0 8px rgba(255, 218, 107, 0.6);
+            opacity: 0;
+            animation: fadeInUp 2s ease forwards;
+        }
+
+        .intro-subtitle {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.6em;
+            margin-top: 20px;
+            color: #ffda6b;
+            text-shadow: 0 0 12px rgba(230, 207, 255, 0.6);
+            opacity: 0;
+            animation: fadeIn 1.5s ease forwards;
+            animation-delay: 1.5s;
+            text-align: center;
+            position: absolute;
+            bottom: 30%; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 90%;
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background-color: #0d0126;
+            color: #f0e0ff;
+            overflow-x: hidden;
+            line-height: 1.7;
+            position: relative;
+            padding-bottom: 50px;
+        }
+
+        .background-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(135deg, transparent 50%, rgba(20, 100, 150, 0.4) 80%),
+                linear-gradient(25deg, transparent 50%, rgba(125, 38, 172, 0.4) 80%),
+                linear-gradient(105deg, transparent 50%, rgba(90, 20, 138, 0.4) 80%),
+                linear-gradient(195deg, transparent 50%, rgba(58, 15, 90, 0.4) 80%),
+                radial-gradient(ellipse at 80% 80%, rgba(255, 218, 107, 0.2), transparent 60%);
+            background-size: 100% 200%, 100% 200%, 100% 200%, 100% 200%, 100% 100%;
+            background-repeat: repeat-y, repeat-y, repeat-y, repeat-y, no-repeat;
+            animation: auroraFlow 10s linear infinite;
+            opacity: 0.9;
+            z-index: -2;
+        }
+
+        @keyframes auroraFlow {
+            0% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 80% 80%; }
+            100% { background-position: 0% 100%, 0% 100%, 0% 100%, 0% 100%, 80% 80%; }
+        }
+
+        .star-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle 1.5s infinite ease-in-out;
+            transform: scale(0);
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 0.8; transform: scale(1); }
+        }
+
+        .meteor {
+            position: absolute;
+            width: 2px;
+            height: 1px;
+            background: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0));
+            border-radius: 50%;
+            transform: rotate(45deg);
+            animation: meteor-fall 5s linear forwards;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .meteor::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: 150px;
+            height: 2px;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0), #ffffff);
+            transform: rotate(0deg);
+        }
+
+        @keyframes meteor-fall {
+            0% {
+                transform: translateX(0px) translateY(-50px) rotate(45deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(400px) translateY(400px) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            padding: 40px 20px;
+            max-width: 800px;
+            width: 90%;
+            margin: 50px auto;
+        }
+
+        .title {
+            font-family: 'Zhi Mang Xing', cursive;
+            font-size: 4em;
+            margin-bottom: 15px;
+            color: #ffda6b;
+            text-shadow: 0 0 20px rgba(255, 218, 107, 0.8), 0 0 8px rgba(255, 218, 107, 0.6);
+            letter-spacing: 3px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4em;
+            margin-bottom: 50px;
+            color: #e6cfff;
+            text-shadow: 0 0 5px rgba(230, 207, 255, 0.3);
+        }
+
+        .form-card, .result-card {
+            background-color: rgba(30, 15, 50, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 40px;
+            border: 2px solid rgba(255, 218, 107, 0.4);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 218, 107, 0.15);
+            transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+        }
+
+        .form-card:hover {
+            transform: translateY(-10px) scale(1.01);
+            box-shadow: 0 15px 60px rgba(0, 0, 0, 0.7), inset 0 0 25px rgba(255, 218, 107, 0.25);
+        }
+
+        .result-hidden {
+            display: none;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            color: #f0e0ff;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(240, 224, 255, 0.3);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 18px;
+            border: 1px solid rgba(255, 218, 107, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border-radius: 12px;
+            font-size: 1.15em;
+            box-sizing: border-box;
+            transition: background-color 0.4s, border-color 0.4s, box-shadow 0.4s;
+        }
+
+        input[type="text"]::placeholder {
+            color: #c4b8e0;
+            opacity: 0.8;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #ffda6b;
+            box-shadow: 0 0 15px rgba(255, 218, 107, 0.6);
+        }
+
+        .date-selects {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .date-selects select {
+            flex: 1;
+            padding: 18px 15px;
+            border: 1px solid rgba(255, 218, 107, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            color: #f0e0ff;
+            border-radius: 12px;
+            font-size: 1.1em;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffda6b%22%20d%3D%22M287%20114.2L146.2%20255.7%205.4%20114.2h281.6z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 12px;
+            padding-right: 40px;
+        }
+
+        .date-selects select option,
+        #spread-select option {
+            background-color: #0d0126;
+            color: #f0e0ff;
+        }
+
+        #spread-select {
+            width: 100%;
+            padding: 18px 15px;
+            border: 1px solid rgba(255, 218, 107, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            color: #f0e0ff;
+            border-radius: 12px;
+            font-size: 1.1em;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffda6b%22%20d%3D%22M287%20114.2L146.2%20255.7%205.4%20114.2h281.6z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 12px;
+            padding-right: 40px;
+        }
+
+        .glow-on-hover {
+            padding: 18px;
+            background-color: #ffda6b;
+            color: #1a0a2f;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.6em;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: background-color 0.4s, transform 0.3s, box-shadow 0.4s;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .glow-on-hover:hover {
+            background-color: #e0c25e;
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 12px 30px rgba(255, 218, 107, 0.6);
+        }
+
+        .spread-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            min-height: auto;
+        }
+
+        .tarot-card {
+            width: 100%;
+            height: auto;
+            display: block;
+            position: relative;
+        }
+
+        .tarot-card img {
+            max-width: 100%;
+            height: auto;
+            border: 3px solid rgba(255, 218, 107, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .tarot-card.reversed img {
+            transform: rotate(180deg);
+        }
+
+        .tarot-card:hover img {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .tarot-card.reversed:hover img {
+            transform: translateY(-5px) scale(1.05) rotate(180deg);
+        }
+
+        .card-position-name {
+            font-size: 1.2em;
+            color: #ffda6b;
+            margin-bottom: 10px;
+            display: block;
+            text-shadow: 0 0 5px rgba(255, 218, 107, 0.4);
+        }
+
+        .tarot-card-name-visible {
+            font-family: 'Zhi Mang Xing', cursive;
+            font-size: 1.6em;
+            margin: 5px 0 0;
+            color: #ffda6b;
+            text-shadow: 0 0 5px rgba(255, 218, 107, 0.4);
+        }
+
+        .card-hover-info {
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            transform: translateY(-50%, -50%);
+            background-color: rgba(30, 15, 50, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 218, 107, 0.6);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.6);
+            width: 250px;
+            max-height: 400px;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+            z-index: 20;
+            text-align: left;
+            white-space: normal;
+            pointer-events: none;
+        }
+
+        .tarot-card:hover .card-hover-info,
+        .tarot-card.active .card-hover-info {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .card-hover-info h3,
+        .card-hover-info h4,
+        .card-hover-info p {
+            font-family: 'Noto Serif SC', serif;
+            line-height: 1.6;
+            color: #c9b1d3;
+            margin: 5px 0;
+        }
+
+        .card-hover-info h4 {
+            font-size: 1.2em;
+            color: #f0e0ff;
+            margin-top: 15px;
+            border-bottom: 1px solid rgba(255, 218, 107, 0.3);
+            padding-bottom: 5px;
+        }
+
+        .card-hover-info p {
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        .card-hover-info .keywords,
+        .card-hover-info .suggestion {
+            font-style: italic;
+            color: #ffda6b;
+            font-size: 0.9em;
+            margin-top: 15px;
+        }
+
+        three-card-spread {
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(3, auto);
+            gap: 30px;
+        }
+
+        .three-card-spread .tarot-card {
+            width: 160px;
+            justify-self: center;
+        }
+
+        .five-card-spread {
+            display: grid;
+            grid-template-areas:
+                ". top ."
+                "left center right"
+                ". bottom .";
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            min-height: auto;
+        }
+
+        .five-card-spread .top { grid-area: top; }
+        .five-card-spread .left { grid-area: left; }
+        .five-card-spread .center { grid-area: center; }
+        .five-card-spread .right { grid-area: right; }
+        .five-card-spread .bottom { grid-area: bottom; }
+
+        .five-card-spread .tarot-card {
+            width: 150px;
+            align-self: center;
+            justify-self: center;
+        }
+
+        @media (max-width: 768px) {
+            .five-card-spread {
+                grid-template-areas:
+                    "top"
+                    "left"
+                    "center"
+                    "right"
+                    "bottom";
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(5, auto);
+                gap: 30px;
+            }
+            .tarot-card {
+                width: 160px;
+            }
+            input[type="text"],
+            .date-selects select,
+            #spread-select {
+                padding: 15px;
+            }
+        }
+
+        .message-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(30, 15, 50, 0.9);
+            border-radius: 20px;
+            padding: 30px 40px;
+            border: 2px solid #ffda6b;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(255, 218, 107, 0.4);
+            text-align: center;
+            max-width: 350px;
+            width: 80%;
+            color: #f0e0ff;
+            animation: fadeIn 0.3s ease-in-out;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .message-box p {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 218, 107, 0.4);
+        }
+
+        .message-box button {
+            padding: 12px 25px;
+            background-color: #ffda6b;
+            color: #1a0a2f;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+        }
+
+        .message-box button:hover {
+            background-color: #e0c25e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 218, 107, 0.6);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="intro-screen">
+        <div class="intro-title">星河占卜</div>
+        <div class="intro-subtitle">塔罗启示，指引命运之路</div>
+    </div>
+    <div class="background-gradient"></div>
+
+    <div class="star-field"></div>
+
+    <div class="container">
+        <h1 class="title">星河占卜，塔罗启示</h1>
+        <p class="subtitle">选择一种牌阵后，集中精神默念需要指引的问题...</p>
+
+        <div id="form-card" class="form-card">
+            <div class="input-group">
+                <label for="name">你的称谓</label>
+                <input type="text" id="name" placeholder="请输入你的名字或昵称">
+            </div>
+
+            <div class="input-group">
+                <label for="phone">手机号码</label>
+                <input type="text" id="phone" placeholder="请输入您的手机号" maxlength="11">
+            </div>
+
+            <div class="input-group">
+                <label>出生年 / 月 / 日</label>
+                <div class="date-selects">
+                    <select id="year-select"></select>
+                    <select id="month-select"></select>
+                    <select id="day-select"></select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="spread-select">选择想占卜的牌阵</label>
+                <select id="spread-select">
+                    <option value="three-card">三牌阵: 过去-现在-未来</option>
+                    <option value="five-card">五牌阵: 十字阵列</option>
+                </select>
+            </div>
+
+            <button id="fortune-btn" class="glow-on-hover">静心冥想，开始占卜</button>
+        </div>
+
+        <div id="result-card" class="result-card result-hidden">
+            <div class="spread-container"></div>
+            <button class="glow-on-hover" onclick="restart()">重新占卜</button>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            const intro = document.querySelector('.intro-screen');
+            setTimeout(() => {
+                intro.style.display = 'none';
+            }, 3000);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const yearSelect = document.getElementById('year-select');
+            const monthSelect = document.getElementById('month-select');
+            const daySelect = document.getElementById('day-select');
+            const nameInput = document.getElementById('name');
+            const phoneInput = document.getElementById('phone');
+            const fortuneBtn = document.getElementById('fortune-btn');
+            const formCard = document.getElementById('form-card');
+            const resultCard = document.getElementById('result-card');
+            const starField = document.querySelector('.star-field');
+
+            // 初始化日期下拉框
+            const currentYear = new Date().getFullYear();
+            for (let i = 1950; i <= currentYear; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i + ' 年';
+                yearSelect.appendChild(option);
+            }
+            yearSelect.value = 2000;
+
+            for (let i = 1; i <= 12; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i + ' 月';
+                monthSelect.appendChild(option);
+            }
+            monthSelect.value = 1;
+
+            function updateDays() {
+                const year = parseInt(yearSelect.value);
+                const month = parseInt(monthSelect.value);
+                const daysInMonth = new Date(year, month, 0).getDate();
+                daySelect.innerHTML = '';
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = i + ' 日';
+                    daySelect.appendChild(option);
+                }
+            }
+            yearSelect.addEventListener('change', updateDays);
+            monthSelect.addEventListener('change', updateDays);
+            updateDays();
+
+            // 星空特效
+            function createStars() {
+                const numberOfStars = 150;
+                for (let i = 0; i < numberOfStars; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    const size = Math.random() * 2 + 1; 
+                    star.style.width = `${size}px`;
+                    star.style.height = `${size}px`;
+                    star.style.top = `${Math.random() * 100}%`;
+                    star.style.left = `${Math.random() * 100}%`;
+                    star.style.animationDelay = `${Math.random() * 1.5}s`;
+                    starField.appendChild(star);
+                }
+            }
+            createStars();
+
+            function createMeteor() {
+                const meteor = document.createElement('div');
+                meteor.className = 'meteor';
+                meteor.style.left = `${Math.random() * 100}%`;
+                meteor.style.top = `${Math.random() * 20}%`; 
+                starField.appendChild(meteor);
+                meteor.addEventListener('animationend', () => {
+                    meteor.remove();
+                });
+            }
+            setInterval(createMeteor, 3000);
+
+            // 核心功能：点击开始占卜
+            fortuneBtn.addEventListener('click', () => {
+                const name = nameInput.value.trim();
+                const phone = phoneInput.value.trim();
+                const birthday = `${yearSelect.value}-${monthSelect.value}-${daySelect.value}`;
+                const spreadType = document.getElementById('spread-select').value;
+
+                // 验证必填项
+                if (!name || !phone) {
+                    showMessageBox('请填写完整的称谓和手机号');
+                    return;
+                }
+                if (phone.length < 11) {
+                    showMessageBox('请输入正确的手机号码');
+                    return;
+                }
+
+                // --- 发送资料到 Google 表格 ---
+                // !!! 请在此处粘贴您部署后的真实 URL !!!
+                const scriptUrl = 'https://script.google.com/macros/s/AKfycbzCXewC2A85ypBZxV2l0HVXlczdLY4VYrgrwxkOOPImKhcbliW2LL26n110IYC-hTA/exec';
+
+                fetch(scriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name,
+                        phone: phone,
+                        birthday: birthday,
+                        spread: spreadType === 'three-card' ? '三牌阵' : '五牌阵'
+                    })
+                });
+
+                // --- 切换 UI 并生成占卜结果 ---
+                formCard.classList.add('result-hidden');
+                resultCard.classList.remove('result-hidden');
+
+                const container = resultCard.querySelector('.spread-container');
+                container.innerHTML = '';
+
+                if (spreadType === 'three-card') {
+                    container.className = 'spread-container three-card-spread';
+                    generateSpread(3, ['过去', '现在', '未来']);
+                } else {
+                    container.className = 'spread-container five-card-spread';
+                    generateSpread(5, ['指示牌', '挑战', '基础', '过去', '未来'], ['center', 'top', 'bottom', 'left', 'right']);
+                }
+            });
+
+            // 占卜结果生成逻辑
+            const fullTarotDeck = [
+                {
+                    name: '愚者', title: 'The Fool', image: 'images/the_fool.png', 
+                    uprightMeaning: '新的开始、自由、纯真、冒险、潜力、无忧无虑。',
+                    reversedMeaning: '鲁莽、不负责任、缺乏方向、轻率、被束缚。',
+                    keywords: '冒险, 新开始, 自由, 潜能',
+                    suggestion: '拥抱新的可能性，放手一搏，但请记住保持理性和责任心。详细解读请至abc169.vip'
+                },
+                {
+                    name: '魔术师', title: 'The Magician', image: 'images/the_magician.png', 
+                    uprightMeaning: '力量、技巧、专注、创造力、实现目标。',
+                    reversedMeaning: '欺骗、操纵、缺乏力量、无能为力。',
+                    keywords: '行动力, 技能, 创造, 专注',
+                    suggestion: '你拥有实现目标所需的一切。现在是采取行动，将想法变为现实的最佳时机。详细解读请至abc169.vip'
+                },
+                {
+                    name: '女祭司', title: 'The High Priestess', image: 'images/the_high_priestess.png',   
+                    uprightMeaning: '直觉、潜意识、神秘、内在智慧、安静、耐心。',
+                    reversedMeaning: '隐藏的秘密、直觉被忽略、表面化、情绪不稳定。',
+                    keywords: '直觉, 神秘, 智慧, 洞察',
+                    suggestion: '倾听你内心的声音，相信你的直觉。答案可能就在你内心深处，而非外部世界。详细解读请至abc169.vip'
+                },
+                {
+                    name: '皇后', title: 'The Empress', image: 'images/the_emp.png', 
+                    uprightMeaning: '丰收、生育、母性、自然、美丽、创造力。',
+                    reversedMeaning: '停滞、不孕、依赖他人、缺乏创意、物质主义。',
+                    keywords: '丰饶, 创造力, 美, 母性',
+                    suggestion: '你正处于一个充满创造力和丰收的时期。照顾好自己，享受生活中的美好。详细解读请至abc169.vip'
+                },
+                {
+                    name: '皇帝', title: 'The Emperor', image: 'images/the_emperor.png',   
+                    uprightMeaning: '权威、结构、秩序、领导力、控制、稳固。',
+                    reversedMeaning: '暴君、独裁、缺乏控制、刚愎自用。',
+                    keywords: '权威, 领导力, 秩序, 稳定',
+                    suggestion: '现在是时候建立稳固的基础和秩序了。展现你的领导力，掌控局面。详细解读请至abc169.vip'
+                },
+                {
+                    name: '教皇', title: 'The Hierophant', image: 'images/the_hierophant.png',   
+                    uprightMeaning: '传统、信仰、价值观、指导、仪式。',
+                    reversedMeaning: '反叛、非传统、束缚、落伍。',
+                    keywords: '传统, 指引, 学习, 精神',
+                    suggestion: '寻求一位导师或遵循既定的道路，以获得所需的智慧和指引。详细解读请至abc169.vip'
+                },
+                {
+                    name: '恋人', title: 'The Lovers', image: 'images/the_lovers.png',   
+                    uprightMeaning: '选择、爱、关系、和谐、价值观。',
+                    reversedMeaning: '冲突、不和谐、不负责任的选择、分离。',
+                    keywords: '爱, 选择, 关系, 价值观',
+                    suggestion: '你正面临一个重要的决定，它将影响你的人际关系和未来。跟随你的心，做出正确的选择。详细解读请至abc169.vip'
+                },
+                {
+                    name: '战车', title: 'The Chariot', image: 'images/the_chariot.png',   
+                    uprightMeaning: '意志力、决心、胜利、控制、自信。',
+                    reversedMeaning: '缺乏控制、失败、方向不明、冲动。',
+                    keywords: '胜利, 决心, 控制, 成功',
+                    suggestion: '勇往直前，克服一切障碍。你的决心和自信将引领你走向胜利。详细解读请至abc169.vip'
+                },
+                {
+                    name: '力量', title: 'Strength', image: 'images/strength.png',   
+                    uprightMeaning: '勇气、同情心、内在力量、耐心、对本能的驾驭。',
+                    reversedMeaning: '软弱、自我怀疑、缺乏自信、恐惧。',
+                    keywords: '勇气, 力量, 同情心, 内心',
+                    suggestion: '真正的力量源于内心的平静与温柔。用勇气和同情心去面对挑战。详细解读请至abc169.vip'
+                },
+                {
+                    name: '隐士', title: 'The Hermit', image: 'images/the_hermit.png',   
+                    uprightMeaning: '内省、孤独、寻求真理、自我发现。',
+                    reversedMeaning: '孤立、退缩、孤独、不愿面对现实。',
+                    keywords: '内省, 智慧, 孤独, 沉思',
+                    suggestion: '现在是时候退一步思考，寻找内在的智慧和指引了。独处将为你带来答案。详细解读请至abc169.vip'
+                },
+                {
+                    name: '命运之轮', title: 'Wheel of Fortune', image: 'images/wheel_of_fortune.png',   
+                    uprightMeaning: '循环、命运、转折、好运、改变。',
+                    reversedMeaning: '厄运、停滞、失控、无法预测的变化。',
+                    keywords: '命运, 变化, 机会, 周期',
+                    suggestion: '生活正发生不可预测的变化，把握机会，迎接新的开始。详细解读请至abc169.vip'
+                },
+                {
+                    name: '正义', title: 'Justice', image: 'images/justice.png',   
+                    uprightMeaning: '公平、真理、因果、法律、平衡。',
+                    reversedMeaning: '不公正、偏见、不诚实、逃避责任。',
+                    keywords: '公平, 真理, 平衡, 因果',
+                    suggestion: '所有行为都将带来相应的后果。确保你的行为公正，并为自己的决定负责。详细解读请至abc169.vip'
+                },
+                {
+                    name: '倒吊人', title: 'The Hanged Man', image: 'images/the_hanged_man.png',   
+                    uprightMeaning: '新的视角、牺牲、放下、暂停、洞察。',
+                    reversedMeaning: '固执、无谓的牺牲、停滞不前、不愿改变。',
+                    keywords: '新视角, 牺牲, 放下, 等待',
+                    suggestion: '从不同的角度看问题。暂时放下控制，你将获得新的洞察。详细解读请至abc169.vip'
+                },
+                {
+                    name: '死神', title: 'Death', image: 'images/death.png',   
+                    uprightMeaning: '结束、转变、重生、释放、新的开始。',
+                    reversedMeaning: '停滞、抗拒改变、恐惧、拒绝放手。',
+                    keywords: '结束, 转变, 重生, 释放',
+                    suggestion: '一个旧的阶段即将结束，新的开始即将到来。不要害怕改变，拥抱它，你将获得重生。详细解读请至abc169.vip'
+                },
+                {
+                    name: '节制', title: 'Temperance', image: 'images/temperance.png',   
+                    uprightMeaning: '平衡、中庸、和谐、耐心、适应。',
+                    reversedMeaning: '不平衡、冲突、极端、不和谐。',
+                    keywords: '平衡, 和谐, 耐心, 融合',
+                    suggestion: '将对立的力量融合在一起，保持平和的心态和中庸之道。详细解读请至abc169.vip'
+                },
+                {
+                    name: '魔鬼', title: 'The Devil', image: 'images/the_devil.png',   
+                    uprightMeaning: '诱惑、束缚、物质主义、阴影面。',
+                    reversedMeaning: '挣脱束缚、觉醒、挑战诱惑、获得自由。',
+                    keywords: '诱惑, 欲望, 束缚, 物质',
+                    suggestion: '面对你内心的阴影面。是时候挣脱那些束缚你的不良习惯或执念了。详细解读请至abc169.vip'
+                },
+                {
+                    name: '高塔', title: 'The Tower', image: 'images/the_tower.png',   
+                    uprightMeaning: '突然的改变、混乱、颠覆、启示。',
+                    reversedMeaning: '避免灾难、延迟改变、固执、恐惧。',
+                    keywords: '巨变, 破坏, 启示, 混乱',
+                    suggestion: '虽然过程痛苦，但它会摧毁不稳固的根基，为真正的成长腾出空间。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星星', title: 'The Star', image: 'images/the_star.png',   
+                    uprightMeaning: '希望、灵感、宁静、更新、治愈。',
+                    reversedMeaning: '绝望、缺乏灵感、悲观、挫败。',
+                    keywords: '希望, 灵感, 平静, 未来',
+                    suggestion: '为你带来希望和清晰的指引。相信未来，你正被祝福着。详细解读请至abc169.vip'
+                },
+                {
+                    name: '月亮', title: 'The Moon', image: 'images/the_moon.png',   
+                    uprightMeaning: '幻觉、潜意识、不安、直觉、恐惧。',
+                    reversedMeaning: '看清真相、释放恐惧、克服不安。',
+                    keywords: '幻觉, 不安, 潜意识, 直觉',
+                    suggestion: '相信你的直觉来穿越不确定的时期，提防欺骗和自我欺骗。详细解读请至abc169.vip'
+                },
+                {
+                    name: '太阳', title: 'The Sun', image: 'images/the_sun.png',   
+                    uprightMeaning: '成功、喜悦、活力、光明、幸福。',
+                    reversedMeaning: '缺乏活力、悲伤、失败、乌云密布。',
+                    keywords: '成功, 快乐, 活力, 光明',
+                    suggestion: '这是塔罗牌中最积极的牌之一。它预示着一切都将顺利。尽情享受生活吧！详细解读请至abc169.vip'
+                },
+                {
+                    name: '审判', title: 'Judgement', image: 'images/judgement.png',   
+                    uprightMeaning: '重生、审视、召唤、觉醒、评估。',
+                    reversedMeaning: '自我怀疑、拒绝改变、推迟决定。',
+                    keywords: '审判, 重生, 觉醒, 评估',
+                    suggestion: '你正准备进入人生的新阶段。诚实地审视你的过去，并为未来做出决定。详细解读请至abc169.vip'
+                },
+                {
+                    name: '世界', title: 'The World', image: 'images/the_world.png',   
+                    uprightMeaning: '完成、成就、整合、圆满、成功。',
+                    reversedMeaning: '未完成、缺乏整合、停滞、延迟成功。',
+                    keywords: '完成, 成就, 圆满, 整合',
+                    suggestion: '它预示着一段旅程的成功结束。你已经实现了你的目标，尽情庆祝吧！详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 ACE',
+                    title: 'Ace of Wands',
+                    image: 'images/wands_ace.png',
+                    uprightMeaning: '灵感、机会、创造力。',
+                    reversedMeaning: '延迟、挫折、缺乏动力。',
+                    keywords: '灵感, 开始, 创造',
+                    suggestion: '抓住新的灵感并付诸行动，它会开启你的新旅程。详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 二',
+                    title: 'Two of Wands',
+                    image: 'images/wands_02.png',
+                    uprightMeaning: '规划、未来愿景、掌控。',
+                    reversedMeaning: '恐惧未知、缺乏远见。',
+                    keywords: '规划, 选择, 掌控',
+                    suggestion: '为未来做好准备，坚定走向你设定的目标。详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 三',
+                    title: 'Three of Wands',
+                    image: 'images/wands_03.png',
+                    uprightMeaning: '拓展、远见、冒险。',
+                    reversedMeaning: '受阻、延迟、错失机会。',
+                    keywords: '远见, 拓展, 冒险',
+                    suggestion: '保持信心，勇敢迈向更广阔的舞台。详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 四',
+                    title: 'Four of Wands',
+                    image: 'images/wands_04.png',
+                    uprightMeaning: '庆祝、稳定、归属。',
+                    reversedMeaning: '不和谐、延迟、不安。',
+                    keywords: '庆祝, 稳定, 幸福',
+                    suggestion: '你正处于值得庆祝的时刻，享受与人共享的喜悦。详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 五',
+                    title: 'Five of Wands',
+                    image: 'images/wands_05.png',
+                    uprightMeaning: '竞争、冲突、意见不合。',
+                    reversedMeaning: '避免冲突、妥协、内耗。',
+                    keywords: '竞争, 冲突, 分歧',
+                    suggestion: '学会从竞争中成长，而不是被其拖累。详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 六',
+                    title: 'Six of Wands',
+                    image: 'images/wands_06.png',
+                    uprightMeaning: '胜利、认可、成功。',
+                    reversedMeaning: '自负、失败、缺乏支持。',
+                    keywords: '胜利, 认可, 成就',
+                    suggestion: '你的努力将得到回报，勇敢接受掌声。详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 七',
+                    title: 'Seven of Wands',
+                    image: 'images/wands_07.png',
+                    uprightMeaning: '防御、坚持立场、挑战。',
+                    reversedMeaning: '放弃、防御失败、犹豫。',
+                    keywords: '坚持, 挑战, 防御',
+                    suggestion: '即便压力重重，也要坚定地守护你的立场。详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 八',
+                    title: 'Eight of Wands',
+                    image: 'images/wands_08.png',
+                    uprightMeaning: '快速行动、进展、沟通。',
+                    reversedMeaning: '延迟、混乱、阻碍。',
+                    keywords: '速度, 进展, 交流',
+                    suggestion: '机会正在快速靠近，把握时机立即行动。详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 九',
+                    title: 'Nine of Wands',
+                    image: 'images/wands_09.png',
+                    uprightMeaning: '坚韧、防御、毅力。',
+                    reversedMeaning: '疲惫、放弃、怀疑。',
+                    keywords: '坚韧, 防御, 毅力',
+                    suggestion: '即将到达终点，不要在最后时刻放弃。详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 十',
+                    title: 'Ten of Wands',
+                    image: 'images/wands_10.png',
+                    uprightMeaning: '责任、压力、负担。',
+                    reversedMeaning: '卸下重担、过劳、阻碍。',
+                    keywords: '负担, 责任, 压力',
+                    suggestion: '学会分担压力，别让自己被责任压垮。详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 侍从',
+                    title: 'Page of Wands',
+                    image: 'images/wands_page.png',
+                    uprightMeaning: '冒险、探索、热情。',
+                    reversedMeaning: '冲动、缺乏方向、幼稚。',
+                    keywords: '探索, 热情, 新冒险',
+                    suggestion: '保持好奇与热情，新的旅程正等待你出发。详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 骑士',
+                    title: 'Knight of Wands',
+                    image: 'images/wands_knight.png',
+                    uprightMeaning: '冒险、冲劲、热情。',
+                    reversedMeaning: '鲁莽、冲动、短暂激情。',
+                    keywords: '冲劲, 行动, 激情',
+                    suggestion: '大胆追求你的目标，但注意不要鲁莽行事。详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 皇后',
+                    title: 'Queen of Wands',
+                    image: 'images/wands_queen.png',
+                    uprightMeaning: '自信、独立、魅力。',
+                    reversedMeaning: '嫉妒、不安、依赖。',
+                    keywords: '自信, 独立, 魅力',
+                    suggestion: '相信你的力量与吸引力，你比自己想象的更强大。详细解读请至abc169.vip'
+                },
+                {
+                    name: '权杖 国王',
+                    title: 'King of Wands',
+                    image: 'images/wands_king.png',
+                    uprightMeaning: '领导力、远见、决断力。',
+                    reversedMeaning: '专制、冲动、操控。',
+                    keywords: '领导, 决断, 远见',
+                    suggestion: '用远见与智慧引导他人，你会成为受人敬仰的领导者。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 ACE',
+                    title: 'Ace of Cups',
+                    image: 'images/cups_ace.png',
+                    uprightMeaning: '爱、新的感情、灵感。',
+                    reversedMeaning: '情感阻塞、空虚、冷漠。',
+                    keywords: '新感情, 爱, 灵感',
+                    suggestion: '向爱与感性敞开心扉，你会获得意想不到的温暖。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 二',
+                    title: 'Two of Cups',
+                    image: 'images/cups_02.png',
+                    uprightMeaning: '结合、伙伴关系、互相吸引。',
+                    reversedMeaning: '不和谐、分离、不平衡。',
+                    keywords: '结合, 爱, 伙伴',
+                    suggestion: '珍惜这份美好的联结，它能带来深刻的情感滋养。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 三',
+                    title: 'Three of Cups',
+                    image: 'images/cups_03.png',
+                    uprightMeaning: '庆祝、友谊、社交。',
+                    reversedMeaning: '过度放纵、疏远、三角关系。',
+                    keywords: '友谊, 庆祝, 快乐',
+                    suggestion: '与朋友或亲人分享喜悦，你会感到能量被重新点燃。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 四',
+                    title: 'Four of Cups',
+                    image: 'images/cups_04.png',
+                    uprightMeaning: '冷漠、内省、不满足。',
+                    reversedMeaning: '觉醒、机会、接受新事物。',
+                    keywords: '冷漠, 内省, 机会',
+                    suggestion: '别忽略身边的机会，适时转变心态能带来突破。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 五',
+                    title: 'Five of Cups',
+                    image: 'images/cups_05.png',
+                    uprightMeaning: '失望、遗憾、哀伤。',
+                    reversedMeaning: '释怀、接受、找到出路。',
+                    keywords: '失落, 哀伤, 后悔',
+                    suggestion: '不要只看失去的，转身看看仍然拥有的祝福。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 六',
+                    title: 'Six of Cups',
+                    image: 'images/cups_06.png',
+                    uprightMeaning: '怀旧、童年、重逢。',
+                    reversedMeaning: '过度沉溺过去、不成熟。',
+                    keywords: '怀旧, 童年, 重逢',
+                    suggestion: '过去的美好能带来力量，但别忘了活在当下。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 七',
+                    title: 'Seven of Cups',
+                    image: 'images/cups_07.png',
+                    uprightMeaning: '幻想、选择、诱惑。',
+                    reversedMeaning: '清醒、做出决定、现实。',
+                    keywords: '幻想, 选择, 诱惑',
+                    suggestion: '众多选项让你眼花缭乱，专注于真正重要的那个。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 八',
+                    title: 'Eight of Cups',
+                    image: 'images/cups_08.png',
+                    uprightMeaning: '离开、寻找意义、自我探索。',
+                    reversedMeaning: '逃避、犹豫、不满足。',
+                    keywords: '离开, 探索, 自我',
+                    suggestion: '勇敢离开不再适合你的环境，新的旅程在等你。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 九',
+                    title: 'Nine of Cups',
+                    image: 'images/cups_09.png',
+                    uprightMeaning: '愿望实现、满足、愉悦。',
+                    reversedMeaning: '贪婪、空虚、不满足。',
+                    keywords: '满足, 愉悦, 心愿',
+                    suggestion: '你的心愿即将实现，保持感恩之心去迎接它。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 十',
+                    title: 'Ten of Cups',
+                    image: 'images/cups_10.png',
+                    uprightMeaning: '幸福、家庭和谐、圆满。',
+                    reversedMeaning: '不和谐、破裂、幻灭。',
+                    keywords: '家庭, 幸福, 圆满',
+                    suggestion: '享受家庭和关系的温暖，它是你最坚实的后盾。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 侍从',
+                    title: 'Page of Cups',
+                    image: 'images/cups_page.png',
+                    uprightMeaning: '直觉、想象力、情感信息。',
+                    reversedMeaning: '情绪不稳、逃避现实、幼稚。',
+                    keywords: '直觉, 想象, 情感',
+                    suggestion: '敞开你的心，倾听直觉，它会带来灵感与新关系。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 骑士',
+                    title: 'Knight of Cups',
+                    image: 'images/cups_knight.png',
+                    uprightMeaning: '浪漫、理想主义、追求。',
+                    reversedMeaning: '幻想、不切实际、滥情。',
+                    keywords: '浪漫, 理想, 情感',
+                    suggestion: '跟随内心的浪漫冲动，但也要脚踏实地。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 皇后',
+                    title: 'Queen of Cups',
+                    image: 'images/cups_queen.png',
+                    uprightMeaning: '同理心、关怀、直觉。',
+                    reversedMeaning: '情绪不稳、过度敏感、依赖。',
+                    keywords: '直觉, 关怀, 同理心',
+                    suggestion: '信任你的直觉与温柔，它是你最大的力量。详细解读请至abc169.vip'
+                },
+                {
+                    name: '圣杯 国王',
+                    title: 'King of Cups',
+                    image: 'images/cups_king.png',
+                    uprightMeaning: '情绪平衡、智慧、仁慈。',
+                    reversedMeaning: '操纵、冷漠、情绪压抑。',
+                    keywords: '平衡, 智慧, 仁慈',
+                    suggestion: '用冷静与智慧来面对情感问题，你会赢得尊重。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 ACE',
+                    title: 'Ace of Swords',
+                    image: 'images/swords_ace.png',
+                    uprightMeaning: '清晰、突破、真理。',
+                    reversedMeaning: '混乱、谎言、误解。',
+                    keywords: '真理, 突破, 清晰',
+                    suggestion: '用理性和真相斩断迷雾，你会找到答案。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 二',
+                    title: 'Two of Swords',
+                    image: 'images/swords_02.png',
+                    uprightMeaning: '抉择、僵局、平衡。',
+                    reversedMeaning: '困惑、回避、失衡。',
+                    keywords: '抉择, 平衡, 僵局',
+                    suggestion: '面对选择时，不要逃避，勇敢做出决定。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 三',
+                    title: 'Three of Swords',
+                    image: 'images/swords_03.png',
+                    uprightMeaning: '心碎、背叛、痛苦。',
+                    reversedMeaning: '疗愈、释放、恢复。',
+                    keywords: '心碎, 背叛, 痛苦',
+                    suggestion: '即使伤口很深，也会在时间中慢慢愈合。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 四',
+                    title: 'Four of Swords',
+                    image: 'images/swords_04.png',
+                    uprightMeaning: '休息、恢复、沉思。',
+                    reversedMeaning: '不安、压力、无眠。',
+                    keywords: '休息, 恢复, 沉思',
+                    suggestion: '适时停下来，给自己空间修复能量。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 五',
+                    title: 'Five of Swords',
+                    image: 'images/swords_05.png',
+                    uprightMeaning: '冲突、输赢、孤立。',
+                    reversedMeaning: '和解、避免争端、反思。',
+                    keywords: '冲突, 失败, 孤立',
+                    suggestion: '赢得争执不代表真正的胜利，学会放下才是智慧。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 六',
+                    title: 'Six of Swords',
+                    image: 'images/swords_06.png',
+                    uprightMeaning: '过渡、离开、疗愈。',
+                    reversedMeaning: '停滞、无法离开、困境。',
+                    keywords: '过渡, 疗愈, 离开',
+                    suggestion: '是时候离开纷争，踏上更平静的旅程。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 七',
+                    title: 'Seven of Swords',
+                    image: 'images/swords_07.png',
+                    uprightMeaning: '欺骗、隐瞒、策略。',
+                    reversedMeaning: '揭穿、诚实、后果。',
+                    keywords: '欺骗, 策略, 隐瞒',
+                    suggestion: '小心隐瞒与欺骗，它可能让你失去信任。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 八',
+                    title: 'Eight of Swords',
+                    image: 'images/swords_08.png',
+                    uprightMeaning: '受困、受限、恐惧。',
+                    reversedMeaning: '解脱、勇敢、看清真相。',
+                    keywords: '受困, 恐惧, 限制',
+                    suggestion: '困境更多是心理造成，勇敢迈出第一步。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 九',
+                    title: 'Nine of Swords',
+                    image: 'images/swords_09.png',
+                    uprightMeaning: '焦虑、噩梦、恐惧。',
+                    reversedMeaning: '释怀、恢复、希望。',
+                    keywords: '焦虑, 恐惧, 噩梦',
+                    suggestion: '别让恐惧吞噬你，正视它才能找回平静。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 十',
+                    title: 'Ten of Swords',
+                    image: 'images/swords_10.png',
+                    uprightMeaning: '结束、毁灭、最低点。',
+                    reversedMeaning: '重生、恢复、希望出现。',
+                    keywords: '结束, 毁灭, 重生',
+                    suggestion: '即使跌到谷底，也意味着新的开始即将到来。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 侍从',
+                    title: 'Page of Swords',
+                    image: 'images/swords_page.png',
+                    uprightMeaning: '好奇、观察、思考。',
+                    reversedMeaning: '流言、焦躁、缺乏方向。',
+                    keywords: '好奇, 学习, 思考',
+                    suggestion: '保持学习的心态，但别急躁，慢慢成长。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 骑士',
+                    title: 'Knight of Swords',
+                    image: 'images/swords_knight.png',
+                    uprightMeaning: '快速行动、野心、冲劲。',
+                    reversedMeaning: '冲动、鲁莽、急躁。',
+                    keywords: '冲劲, 行动, 野心',
+                    suggestion: '有目标就勇敢前进，但别失去冷静与理智。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 皇后',
+                    title: 'Queen of Swords',
+                    image: 'images/swords_queen.png',
+                    uprightMeaning: '理性、独立、洞察力。',
+                    reversedMeaning: '冷漠、刻薄、孤立。',
+                    keywords: '理性, 洞察, 独立',
+                    suggestion: '运用理性看清真相，你会找到最优解。详细解读请至abc169.vip'
+                },
+                {
+                    name: '宝剑 国王',
+                    title: 'King of Swords',
+                    image: 'images/swords_king.png',
+                    uprightMeaning: '智慧、公正、权威。',
+                    reversedMeaning: '专制、冷酷、滥用权力。',
+                    keywords: '智慧, 公正, 权威',
+                    suggestion: '保持公正与清晰的头脑，你会赢得尊敬。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 ACE',
+                    title: 'Ace of Pentacles',
+                    image: 'images/pentacles_ace.png',
+                    uprightMeaning: '财富新机遇、稳定、繁荣。',
+                    reversedMeaning: '机会流失、不安全感。',
+                    keywords: '财富, 机会, 繁荣',
+                    suggestion: '新的财富与稳定机会正在出现，把握住它。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 二',
+                    title: 'Two of Pentacles',
+                    image: 'images/pentacles_02.png',
+                    uprightMeaning: '平衡、灵活、适应。',
+                    reversedMeaning: '失衡、混乱、过度压力。',
+                    keywords: '平衡, 灵活, 适应',
+                    suggestion: '学会灵活处理多重事务，你会找到节奏。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 三',
+                    title: 'Three of Pentacles',
+                    image: 'images/pentacles_03.png',
+                    uprightMeaning: '合作、学习、成就。',
+                    reversedMeaning: '缺乏协作、停滞。',
+                    keywords: '合作, 学习, 成就',
+                    suggestion: '团队合作能让你的成果更上一层楼。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 四',
+                    title: 'Four of Pentacles',
+                    image: 'images/pentacles_04.png',
+                    uprightMeaning: '控制、保守、稳定。',
+                    reversedMeaning: '贪婪、固执、失去安全感。',
+                    keywords: '保守, 稳定, 控制',
+                    suggestion: '财富带来安全感，但学会适度分享才会长久。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 五',
+                    title: 'Five of Pentacles',
+                    image: 'images/pentacles_05.png',
+                    uprightMeaning: '贫困、孤立、困难。',
+                    reversedMeaning: '援助、恢复、希望出现。',
+                    keywords: '贫困, 孤立, 困境',
+                    suggestion: '即便身处困境，也不要忽视伸向你的援手。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 六',
+                    title: 'Six of Pentacles',
+                    image: 'images/pentacles_06.png',
+                    uprightMeaning: '慷慨、分享、平衡。',
+                    reversedMeaning: '不公平、依赖、操纵。',
+                    keywords: '慷慨, 分享, 平衡',
+                    suggestion: '给予和接受之间要保持平衡。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 七',
+                    title: 'Seven of Pentacles',
+                    image: 'images/pentacles_07.png',
+                    uprightMeaning: '耐心、评估、长期投资。',
+                    reversedMeaning: '焦躁、缺乏成果、浪费。',
+                    keywords: '耐心, 投资, 评估',
+                    suggestion: '坚持耐心等待，你的努力会结出果实。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 八',
+                    title: 'Eight of Pentacles',
+                    image: 'images/pentacles_08.png',
+                    uprightMeaning: '专注、勤奋、技能提升。',
+                    reversedMeaning: '懒散、半途而废、敷衍。',
+                    keywords: '勤奋, 技能, 学习',
+                    suggestion: '专注于提升技能，它会带来长远回报。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 九',
+                    title: 'Nine of Pentacles',
+                    image: 'images/pentacles_09.png',
+                    uprightMeaning: '独立、享受成果、奢华。',
+                    reversedMeaning: '依赖、孤独、失去保障。',
+                    keywords: '独立, 成果, 奢华',
+                    suggestion: '享受你努力换来的成果，学会自我欣赏。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 十',
+                    title: 'Ten of Pentacles',
+                    image: 'images/pentacles_10.png',
+                    uprightMeaning: '财富、家庭传承、稳定。',
+                    reversedMeaning: '分裂、破产、失去安全感。',
+                    keywords: '财富, 家庭, 稳定',
+                    suggestion: '你的努力能为家族与后代留下长远保障。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 侍从',
+                    title: 'Page of Pentacles',
+                    image: 'images/pentacles_page.png',
+                    uprightMeaning: '学习、机会、稳定开端。',
+                    reversedMeaning: '拖延、缺乏专注、错失机会。',
+                    keywords: '学习, 机会, 开端',
+                    suggestion: '新的机会正在出现，保持学习心态去迎接它。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 骑士',
+                    title: 'Knight of Pentacles',
+                    image: 'images/pentacles_knight.png',
+                    uprightMeaning: '责任心、稳重、坚持。',
+                    reversedMeaning: '死板、停滞、拖延。',
+                    keywords: '责任, 稳定, 坚持',
+                    suggestion: '稳扎稳打，你的坚持会带来可靠的成果。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 皇后',
+                    title: 'Queen of Pentacles',
+                    image: 'images/pentacles_queen.png',
+                    uprightMeaning: '富足、务实、关怀。',
+                    reversedMeaning: '过度依赖、物质主义、焦虑。',
+                    keywords: '富足, 务实, 关怀',
+                    suggestion: '保持务实并照顾好他人，你会收获尊重与稳定。详细解读请至abc169.vip'
+                },
+                {
+                    name: '星币 国王',
+                    title: 'King of Pentacles',
+                    image: 'images/pentacles_king.png',
+                    uprightMeaning: '成功、稳定、财富。',
+                    reversedMeaning: '贪婪、物质化、失控。',
+                    keywords: '财富, 稳定, 成功',
+                    suggestion: '以稳健与智慧掌控财富，你会拥有长远的成就。详细解读请至abc169.vip'
+                }
+            ];
+
+            function generateSpread(count, positions, areas = []) {
+                const container = resultCard.querySelector('.spread-container');
+                const usedIndices = new Set();
+                
+                for (let i = 0; i < count; i++) {
+                    let randomIndex;
+                    do {
+                        randomIndex = Math.floor(Math.random() * fullTarotDeck.length);
+                    } while (usedIndices.has(randomIndex));
+                    usedIndices.add(randomIndex);
+
+                    const card = fullTarotDeck[randomIndex];
+                    const isReversed = Math.random() < 0.3;
+
+                    const cardElement = document.createElement('div');
+                    cardElement.className = `tarot-card ${isReversed ? 'reversed' : ''} ${areas[i] || ''}`;
+                    cardElement.innerHTML = `
+                        <span class="card-position-name">${positions[i]}</span>
+                        <img src="https://via.placeholder.com/150x250/1e0f32/ffda6b?text=Tarot+Card" alt="${card.name}">
+                        <p class="tarot-card-name-visible">${card.name} (${isReversed ? '逆位' : '正位'})</p>
+                        <div class="card-hover-info">
+                            <h3>${card.name} - ${card.title}</h3>
+                            <h4>${isReversed ? '逆位含义' : '正位含义'}</h4>
+                            <p>${isReversed ? card.reversedMeaning : card.uprightMeaning}</p>
+                            <p class="keywords">关键词: ${card.keywords}</p>
+                            <p class="suggestion">${card.suggestion}</p>
+                        </div>
+                    `;
+                    container.appendChild(cardElement);
+                }
+            }
+
+            window.restart = function() {
+                formCard.classList.remove('result-hidden');
+                resultCard.classList.add('result-hidden');
+                nameInput.value = '';
+                phoneInput.value = '';
+            };
+
+            function showMessageBox(message) {
+                if (document.querySelector('.message-overlay')) return;
+                const overlay = document.createElement('div');
+                overlay.className = 'message-overlay';
+                const messageBox = document.createElement('div');
+                messageBox.className = 'message-box';
+                messageBox.innerHTML = `
+                    <div class="message-content">
+                        <p>${message}</p>
+                        <button class="message-ok">确定</button>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+                document.body.appendChild(messageBox);
+                messageBox.querySelector('.message-ok').addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                    document.body.removeChild(messageBox);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

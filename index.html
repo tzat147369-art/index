@@ -635,7 +635,6 @@
             const resultCard = document.getElementById('result-card');
             const starField = document.querySelector('.star-field');
 
-            // 初始化日期下拉框
             const currentYear = new Date().getFullYear();
             for (let i = 1950; i <= currentYear; i++) {
                 const option = document.createElement('option');
@@ -669,7 +668,6 @@
             monthSelect.addEventListener('change', updateDays);
             updateDays();
 
-            // 星空特效
             function createStars() {
                 const numberOfStars = 150;
                 for (let i = 0; i < numberOfStars; i++) {
@@ -698,25 +696,21 @@
             }
             setInterval(createMeteor, 3000);
 
-            // 核心功能：点击开始占卜
             fortuneBtn.addEventListener('click', () => {
                 const name = nameInput.value.trim();
                 const phone = phoneInput.value.trim();
                 const birthday = `${yearSelect.value}-${monthSelect.value}-${daySelect.value}`;
                 const spreadType = document.getElementById('spread-select').value;
 
-                // 验证必填项
                 if (!name || !phone) {
                     showMessageBox('请填写完整的称谓和手机号');
                     return;
                 }
                 if (phone.length < 11) {
-                    showMessageBox('请输入正确的手机号码');
+                    showMessageBox('请输入正确的手机号');
                     return;
                 }
 
-                // --- 发送资料到 Google 表格 ---
-                // !!! 请在此处粘贴您部署后的真实 URL !!!
                 const scriptUrl = 'https://script.google.com/macros/s/AKfycbzCXewC2A85ypBZxV2l0HVXlczdLY4VYrgrwxkOOPImKhcbliW2LL26n110IYC-hTA/exec';
 
                 fetch(scriptUrl, {
@@ -731,7 +725,6 @@
                     })
                 });
 
-                // --- 切换 UI 并生成占卜结果 ---
                 formCard.classList.add('result-hidden');
                 resultCard.classList.remove('result-hidden');
 
@@ -747,7 +740,6 @@
                 }
             });
 
-            // 占卜结果生成逻辑
             const fullTarotDeck = [
                 {
                     name: '愚者', title: 'The Fool', image: 'images/the_fool.png', 
@@ -1425,18 +1417,19 @@
 
                     const cardElement = document.createElement('div');
                     cardElement.className = `tarot-card ${isReversed ? 'reversed' : ''} ${areas[i] || ''}`;
-                    cardElement.innerHTML = `
-                        <span class="card-position-name">${positions[i]}</span>
-                        <img src="https://via.placeholder.com/150x250/1e0f32/ffda6b?text=Tarot+Card" alt="${card.name}">
-                        <p class="tarot-card-name-visible">${card.name} (${isReversed ? '逆位' : '正位'})</p>
-                        <div class="card-hover-info">
-                            <h3>${card.name} - ${card.title}</h3>
-                            <h4>${isReversed ? '逆位含义' : '正位含义'}</h4>
-                            <p>${isReversed ? card.reversedMeaning : card.uprightMeaning}</p>
-                            <p class="keywords">关键词: ${card.keywords}</p>
-                            <p class="suggestion">${card.suggestion}</p>
-                        </div>
-                    `;
+
+cardElement.innerHTML = `
+    <span class="card-position-name">${positions[i]}</span>
+    <img src="${card.image}" alt="${card.name}">
+    <p class="tarot-card-name-visible">${card.name} (${isReversed ? '逆位' : '正位'})</p>
+    <div class="card-hover-info">
+        <h3>${card.name} - ${card.title}</h3>
+        <h4>${isReversed ? '逆位含义' : '正位含义'}</h4>
+        <p>${isReversed ? card.reversedMeaning : card.uprightMeaning}</p>
+        <p class="keywords">关键词: ${card.keywords}</p>
+        <p class="suggestion">${card.suggestion}</p>
+    </div>
+`;
                     container.appendChild(cardElement);
                 }
             }
